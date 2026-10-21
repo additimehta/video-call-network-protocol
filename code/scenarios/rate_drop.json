@@ -1,0 +1,12 @@
+{
+  "seed": 1,
+  "clip": "bbb",
+  "rate_kbps": [[0, 4000], [12000, 1200]],
+  "link": {
+    "delay_ms": 30,
+    "jitter_ms": 5,
+    "max_wait_ms": 150,
+    "loss_rate": 0.0,
+    "loss_burst": 1
+  }
+}

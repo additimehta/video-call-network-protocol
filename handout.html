@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CS 456 A1: A video call application</title>
+<style>
+  body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    line-height: 1.55;
+    color: #222;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 25px 20px 60px;
+  }
+  h1 { font-size: 24px; margin: 0 0 6px; }
+  h2 { font-size: 19px; margin: 40px 0 10px; border-bottom: 1px solid #ddd; padding-bottom: 4px; }
+  h3 { font-size: 16px; margin: 24px 0 8px; }
+  p.meta { margin: 0 0 4px; color: #555; }
+  table { width: 100%; border-collapse: collapse; margin: 12px 0; }
+  th, td { padding: 7px 10px; border: 1px solid #ddd; text-align: left; vertical-align: top; }
+  th { background-color: #f5f5f5; border-bottom: 2px solid #333; }
+  code { background: #f3f3f3; padding: 1px 4px; border-radius: 3px; font-size: 14px; }
+  pre { background: #f6f6f6; padding: 10px 14px; overflow-x: auto; font-size: 13.5px; line-height: 1.45; }
+  pre code { background: none; padding: 0; }
+  li { margin-bottom: 6px; }
+  .tbd { background: #fff3b0; padding: 0 3px; }
+  .chk { background: #d6e6ff; }
+  .footnote { font-size: 13px; color: #555; }
+  .box { border: 1px solid #ddd; background: #fafafa; padding: 10px 14px; margin: 12px 0; }
+  .table-wrap { overflow-x: auto; }
+  .fig { margin: 16px 0 20px; }
+  .fig svg { width: 100%; height: auto; display: block; }
+  .fig figcaption { color: #555; font-size: 14px; margin-top: 6px; }
+</style>
+</head>
+<body>
+
+<h1>Assignment 1: A video call application</h1>
+<p class="meta">CS 456, Fall 2026</p>
+<p class="meta">Released Tue, Oct 6 &middot; Due Wed, Oct 28, 11:59 pm</p>
+
+<p>In this assignment, you will build a simple video call application. In a real video conferencing application, many users can join a call and talk at the same time. For this assignment, we have simplified that to two users. Only one of them, the <strong>sender</strong>, has their video on, and the goal is to play the sender's video, live, for the other user, the <strong>receiver</strong>. We have also left out audio.</p>
+<p>In class, we have talked at length about web applications and on-demand video streaming, and about video calls too. What makes a video call different is that it happens in real time. A web page can take an extra second to load, and an on-demand video player can buffer several seconds ahead. In a call, a frame that shows up more than 200 ms after it was captured is too late to be useful. A video call application needs to deliver frames in time, even when the network loses packets or its throughput and latency change in the middle of the call.</p>
+<p>We have also discussed how transport protocols can help applications deal with an unreliable network whose conditions change. Most existing network stacks provide two options for transport. One is bare-bones, like UDP. It does not do segmentation and reassembly, and it is best effort (for example, it does not recover lost packets). You give it a piece of your data, already chunked to fit in one packet, and if that chunk makes it to the receiver, it is delivered to the right application on the destination computer. The other gives the application a fully reliable byte stream, like TCP. As we discussed in class, the latter does not quite fit a video call, so most video call applications use the bare-bones one and deal with loss and with changes in delay and rate in the application itself. That is what you will do in this assignment, over a simulated network, as a way to practice what we learned in Part 1.</p>
+
+<h2>Use of AI</h2>
+<ul>
+  <li><strong>Code:</strong> you may use AI tools to help write your code. You are responsible for the submitted code and should understand it well enough to explain both your design decisions and any part of your code.</li>
+  <li><strong>Report:</strong> must be written by you, without the help of AI. The report is about your design decisions and the rationale behind them. We may ask you to meet with us and explain your code and your report. If you cannot demonstrate a sufficiently deep understanding of your design decisions and code, you will receive a penalty, which can include receiving no marks for this assignment and more.</li>
+</ul>
+
+<h2>1. Overview</h2>
+<figure class="fig">
+<svg viewBox="0 0 880 420" role="img" aria-label="The sender's machine on the left and the receiver's machine on the right, with the simulated network between them. The receiver's join.py gets the passcode from the join server over a reliable byte stream. setup.py on each side exchanges JOIN, ACCEPT and CONFIRM across the network. call.py on each side carries the video: the camera gives frames to the Sender, which sends packets to the Receiver, which hands frames to the player.">
+  <defs>
+    <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#333"/></marker>
+  </defs>
+  <style>
+    .mach { fill: none; stroke: #333; stroke-width: 1.5; }
+    .net { fill: #f6f6f6; stroke: #999; stroke-dasharray: 6 4; }
+    .you { fill: #e3ecfb; stroke: #2f5fb3; stroke-width: 1.5; }
+    .given { fill: #f3f3f3; stroke: #999; }
+    .t { font: 14px Arial, Helvetica, sans-serif; fill: #222; }
+    .h { font: bold 15px Arial, Helvetica, sans-serif; fill: #222; }
+    .s { font: 12.5px Arial, Helvetica, sans-serif; fill: #555; }
+    .f { font: bold 14px Menlo, Consolas, monospace; fill: #2f5fb3; }
+    .ln { stroke: #333; stroke-width: 1.5; fill: none; }
+    .stage { fill: #333; }
+    .stage-t { font: bold 13px Arial, Helvetica, sans-serif; fill: #fff; }
+  </style>
+
+  <rect class="mach" x="10" y="30" width="280" height="300" rx="10"/>
+  <text class="h" x="150" y="22" text-anchor="middle">Sender's machine</text>
+  <rect class="mach" x="590" y="30" width="280" height="380" rx="10"/>
+  <text class="h" x="730" y="22" text-anchor="middle">Receiver's machine</text>
+  <rect class="net" x="310" y="110" width="260" height="220" rx="10"/>
+  <text class="h" x="440" y="134" text-anchor="middle">Simulated network</text>
+  <text class="s" x="440" y="152" text-anchor="middle">loses, delays and reorders packets;</text>
+  <text class="s" x="440" y="168" text-anchor="middle">limited rate; rate and delay can change</text>
+
+  <rect class="given" x="30" y="50" width="240" height="44" rx="6"/>
+  <text class="t" x="150" y="77" text-anchor="middle">camera: 25 frames/s</text>
+  <rect class="given" x="610" y="50" width="240" height="44" rx="6"/>
+  <text class="t" x="730" y="77" text-anchor="middle">player: shows 25 frames/s</text>
+
+  <rect class="you" x="30" y="180" width="240" height="56" rx="6"/>
+  <text class="f" x="150" y="203" text-anchor="middle">call.py</text>
+  <text class="t" x="150" y="224" text-anchor="middle">Sender</text>
+  <rect class="you" x="610" y="180" width="240" height="56" rx="6"/>
+  <text class="f" x="730" y="203" text-anchor="middle">call.py</text>
+  <text class="t" x="730" y="224" text-anchor="middle">Receiver</text>
+
+  <rect class="you" x="30" y="258" width="240" height="56" rx="6"/>
+  <text class="f" x="150" y="281" text-anchor="middle">setup.py</text>
+  <text class="t" x="150" y="302" text-anchor="middle">SenderSetup</text>
+  <rect class="you" x="610" y="258" width="240" height="56" rx="6"/>
+  <text class="f" x="730" y="281" text-anchor="middle">setup.py</text>
+  <text class="t" x="730" y="302" text-anchor="middle">ReceiverSetup</text>
+
+  <rect class="you" x="610" y="340" width="240" height="56" rx="6"/>
+  <text class="f" x="730" y="363" text-anchor="middle">join.py</text>
+  <text class="t" x="730" y="384" text-anchor="middle">get_passcode</text>
+  <rect class="given" x="330" y="346" width="130" height="44" rx="6"/>
+  <text class="t" x="395" y="373" text-anchor="middle">join server</text>
+
+  <line class="ln" x1="150" y1="94" x2="150" y2="178" marker-end="url(#ah)"/>
+  <text class="s" x="158" y="140">frames</text>
+  <line class="ln" x1="730" y1="178" x2="730" y2="96" marker-end="url(#ah)"/>
+  <text class="s" x="738" y="140">player.show</text>
+
+  <line class="ln" x1="272" y1="200" x2="608" y2="200" marker-end="url(#ah)"/>
+  <text class="t" x="440" y="194" text-anchor="middle">video packets</text>
+  <line class="ln" x1="608" y1="218" x2="272" y2="218" marker-end="url(#ah)"/>
+  <text class="s" x="440" y="233" text-anchor="middle">any packets your receiver sends back</text>
+
+  <line class="ln" x1="272" y1="288" x2="608" y2="288" marker-start="url(#ah)" marker-end="url(#ah)"/>
+  <text class="t" x="440" y="281" text-anchor="middle">JOIN, ACCEPT, CONFIRM</text>
+
+  <line class="ln" x1="462" y1="368" x2="608" y2="368" marker-start="url(#ah)" marker-end="url(#ah)"/>
+  <text class="s" x="522" y="360" text-anchor="middle">reliable byte stream</text>
+
+  <circle class="stage" cx="836" cy="352" r="11"/><text class="stage-t" x="836" y="357" text-anchor="middle">A</text>
+  <circle class="stage" cx="836" cy="270" r="11"/><text class="stage-t" x="836" y="275" text-anchor="middle">B</text>
+  <circle class="stage" cx="836" cy="192" r="11"/><text class="stage-t" x="836" y="197" text-anchor="middle">C</text>
+  <circle class="stage" cx="256" cy="270" r="11"/><text class="stage-t" x="256" y="275" text-anchor="middle">B</text>
+  <circle class="stage" cx="256" cy="192" r="11"/><text class="stage-t" x="256" y="197" text-anchor="middle">C</text>
+</svg>
+
+</figure>
+<p>The assignment has the following parts and deliverables:</p>
+<ul>
+  <li><strong>Part A: Joining the call</strong> (<code>join.py</code>). The receiver gets the call's passcode from a join server.</li>
+  <li><strong>Part B: Setting up the call</strong> (<code>setup.py</code>). The receiver and sender agree to start the call and share call parameters, following a specific protocol described in this document.</li>
+  <li><strong>Part C: The call itself</strong> (<code>call.py</code>). The sender and receiver coordinate to deliver the video to the user at the receiving end host.</li>
+  <li><strong>Report.</strong> A report explaining your design decisions and the rationale behind them.</li>
+</ul>
+<p>The starter code also has <code>sim.py</code>, which runs a whole call over the simulated network and prints your score; <code>clock.py</code>, the simulated clock (Section 2); <code>replay.py</code>, which lets you watch what the viewer saw; <code>baseline/</code>, a simple working <code>call.py</code> to compare against; and <code>scenarios/</code>, practice network conditions. Use Python 3.14, the latest version, and only the standard library.</p>
+<pre><code>python3 sim.py scenarios/random_loss.json baseline  # run the baseline
+python3 sim.py scenarios/random_loss.json           # run yours (a copy of the baseline, for now)
+python3 replay.py logs/random_loss-baseline.json    # then open replay.html in a browser</code></pre>
+<p>On Windows, use <code>python</code> or <code>py</code> instead of <code>python3</code>.</p>
+<p>You can start with any part. Until you have written <code>join.py</code>, <code>sim.py</code> skips joining and gives your receiver the passcode directly. Until you have written <code>setup.py</code>, it skips setting up: the call starts as soon as the receiver has the passcode, and your <code>Sender</code> and <code>Receiver</code> get the call's parameters directly, as opposed to getting them through the setup protocol.</p>
+
+<h2>2. The simulator</h2>
+<p><strong>Interacting with the simulated network.</strong> To interact with the simulated network, your sender and receiver receive a <code>net</code> object:</p>
+<ul>
+  <li>Sending a packet: <code>net.send(pkt: bytes)</code> sends <code>pkt</code>, at most 1500 bytes long, to the other side.</li>
+  <li>Reacting to a received packet: when a packet arrives, the simulator calls the <code>on_packet(pkt)</code> method of the corresponding <code>Receiver</code>, <code>Sender</code>, or setup class.</li>
+</ul>
+<p><strong>The simulated link.</strong> The link is bidirectional, meaning the two directions of the link work simultaneously. Packets going one way never wait behind packets going the other way. We use the same rate and propagation delay for each direction. During the call setup, you will receive the initial rate and the initial round-trip propagation delay (the propagation delay there and back), but they can and will change during the call. Finally, the simulated network will not corrupt or duplicate packets.</p>
+<p>When a packet is sent over the simulated link, it will go through the following steps:</p>
+<ol>
+  <li><strong>Size check.</strong> If the packet is larger than 1500 bytes (the MTU), this is due to an error in your code and the run will stop.</li>
+  <li><strong>Transmission.</strong> The link carries packets one at a time at its rate. The time it takes to put a packet onto the link is the packet size divided by the link rate (the transmission delay). If you send faster than the rate, your packets wait in line behind the ones you sent earlier (the waiting delay). If there are too many packets waiting in line, some may get dropped.</li>
+  <li><strong>Loss.</strong> The packet may be dropped. Packet losses can happen in bursts of several packets in a row.</li>
+  <li><strong>Delay.</strong> The packet arrives after the propagation delay plus a random extra delay, different for every packet (jitter). Because of jitter, packets can arrive out of order.</li>
+</ol>
+<p><strong>Simulated time and timers.</strong> You can access the following methods from the <code>clock</code> module (add <code>import clock</code> at the top of your file):</p>
+<ul>
+  <li><code>clock.now()</code>: the current simulated time, in ms.</li>
+  <li><code>clock.set_timer(delay_ms: float, fn)</code>: call <code>fn()</code> after <code>delay_ms</code> of simulated time. Returns a timer object. You can call <code>cancel()</code> on it to stop the timer.</li>
+</ul>
+<p>Note that the simulator does not simulate processing time. It does not advance time while your code is running, so your code appears to run instantaneously.</p>
+
+<h2>3. Part A: Joining the call</h2>
+<p>To join a call, the receiver needs the call's <strong>passcode</strong>. It gets the passcode from the join server (which is different from the sender).</p>
+<p><strong>Interacting with the join server.</strong> The receiver talks to the join server over a reliable byte stream, represented as a <code>stream</code> object:</p>
+<ul>
+  <li>Sending data: <code>stream.send(data: bytes)</code> sends <code>data</code> to the join server.</li>
+  <li>Receiving data: <code>stream.recv(n: int)</code> waits until bytes arrive from the join server, and returns up to <code>n</code> of them. If the join server has closed the stream, it returns <code>b""</code>.</li>
+</ul>
+<p>In this case, and only in this part, the transport protocol underlying the stream interface ensures that data is delivered to the other end reliably and in order. Note that a byte stream delivers bytes, not messages. While the join server sends its whole reply at once, the stream may deliver it in several pieces, so one call to <code>stream.recv</code> may return only part of the reply.</p>
+<p><strong>The join protocol.</strong> The protocol you should adhere to is the following. Each message has the following format: message type, a space, the length of the rest of the message in bytes, a space, and the rest of the message:</p>
+<pre><code>client:  JOIN &lt;length&gt; &lt;call&gt;
+server:  OK &lt;length&gt; &lt;passcode&gt;
+    or   ERR &lt;length&gt; no-such-call</code></pre>
+<p>For example, the request to join the call <code>random_loss</code> is <code>JOIN 11 random_loss</code>. A passcode is a string of letters and digits with varying length across calls. It is always short enough to fit in one packet. After sending its reply, the join server closes the stream.</p>
+<p><strong>What to implement.</strong> Implement the <code>get_passcode</code> function in <code>join.py</code>:</p>
+<pre><code>def get_passcode(stream, call): ...</code></pre>
+<ul>
+  <li><code>call</code> is the name of the call to join.</li>
+  <li>Return the passcode as a string. If the join server replied <code>ERR</code>, or closed the stream before sending a complete reply, return <code>None</code>.</li>
+  <li>When <code>get_passcode</code> returns, the simulator gives the passcode to your <code>ReceiverSetup</code>, which uses it to ask the sender to start the call (Section 4).</li>
+</ul>
+<p><strong>What to watch for.</strong> Your <code>get_passcode</code> should work however the stream splits up the reply: for example, when the whole reply arrives in one piece, when it arrives one byte at a time, or when it arrives in random-sized pieces with pauses between them. It should also handle an <code>ERR</code> reply, and a stream that closes before the reply is complete.</p>
+<p><strong>Testing these cases.</strong> To test your code, you can write a test file that makes the join server and the stream behave in these ways, and give it to <code>sim.py</code> with <code>--test</code>:</p>
+<pre><code>python3 sim.py scenarios/clean.json --test mytest.json</code></pre>
+<p>A test file is a small JSON file, for example <code>{"join": {"reply": "err", "recv_bytes": 1}}</code>. Its <code>join</code> section can have:</p>
+<ul>
+  <li><code>"reply"</code>: <code>"ok"</code> (the default) or <code>"err"</code>.</li>
+  <li><code>"recv_bytes"</code>: if this is <em>x</em>, each call to <code>stream.recv</code> returns at most <em>x</em> bytes, for example 1 for one byte at a time. By default, it returns a random number of bytes.</li>
+  <li><code>"close_after"</code>: the join server closes the stream after sending this many bytes of its reply.</li>
+</ul>
+
+<h2>4. Part B: Setting up the call</h2>
+<p>Before the call starts, the sender and receiver do a handshake, to make sure they are both ready and to agree on the call's parameters. You implement the sender's side of the handshake in the <code>SenderSetup</code> class, and the receiver's side in the <code>ReceiverSetup</code> class, both in <code>setup.py</code>.</p>
+<p><strong>The setup protocol.</strong> The protocol has three message types. Each message fits in one packet. The first byte determines the type of the message, as described below:</p>
+<div class="table-wrap">
+<table>
+  <tr><th>Message</th><th>Sent by</th><th>Message format</th></tr>
+  <tr><td><strong>JOIN</strong></td><td>receiver</td><td><code>0x01</code> (1 byte), followed by the passcode bytes</td></tr>
+  <tr><td><strong>ACCEPT</strong></td><td>sender</td><td><code>0x02</code> (1 byte), followed by the rate in kbps (4 bytes) and the round-trip propagation delay in ms (4 bytes)</td></tr>
+  <tr><td><strong>CONFIRM</strong></td><td>receiver</td><td><code>0x03</code> (1 byte), followed by the same rate (4 bytes) and delay (4 bytes) as in the ACCEPT</td></tr>
+</table>
+</div>
+<p>The rate and delay are unsigned integers, most significant byte first. You send and receive these messages with <code>net.send</code> and <code>on_packet</code> (Section 2), so remember that any of them can be lost, delayed or reordered on the way.</p>
+<p>Your implementation must complete the handshake even when some of these packets are lost. In order for us to test your solution, each side is responsible for the following:</p>
+<ol>
+  <li>The receiver keeps sending JOIN until an ACCEPT arrives.</li>
+  <li>The sender replies to every JOIN that has the right passcode with an ACCEPT, and ignores a JOIN with a wrong passcode. Once it has sent an ACCEPT, it keeps sending ACCEPTs until a CONFIRM arrives whose rate and delay match the ACCEPT (rule 4).</li>
+  <li>The receiver replies to every ACCEPT with a CONFIRM. When it receives the first ACCEPT, your <code>ReceiverSetup</code> calls <code>start_call(rate_kbps, rtt_ms)</code>, and the simulator creates your <code>Receiver</code>, which is responsible for handling the actual video call packets. Setup messages keep going to your <code>ReceiverSetup</code> until the first video packet arrives, which shows that a CONFIRM got through. Until then, it should reply to any later ACCEPT with a CONFIRM. Setup messages that arrive for the receiver after that are dropped.</li>
+  <li>The sender ignores a CONFIRM whose rate and delay do not match its ACCEPT. When it receives the first CONFIRM that matches, your <code>SenderSetup</code> stops sending ACCEPTs and calls <code>start_call()</code>, and the simulator creates your <code>Sender</code>, which is responsible for sending the video, and starts the camera. From then on, the simulator does not give your <code>SenderSetup</code> any more packets, and will drop any setup messages that arrive at the sender.</li>
+</ol>
+<p>How you do this, including how long to wait before sending a message again, is up to you.</p>
+<p><strong>What to implement.</strong> Implement both sides of the protocol in <code>setup.py</code>:</p>
+<pre><code>class SenderSetup:
+    def __init__(self, net, passcode, rate_kbps, rtt_ms, start_call): ...
+    def on_packet(self, pkt): ...
+
+class ReceiverSetup:
+    def __init__(self, net, passcode, start_call): ...
+    def on_packet(self, pkt): ...</code></pre>
+<ul>
+  <li><code>SenderSetup</code> is created at time 0, and is given the right passcode and the rate and delay to put in its ACCEPT. Note that these represent the rate and delay values <strong>only at the start of the call</strong> and can change during the call. The simulator calls its <code>on_packet</code> when a JOIN or CONFIRM arrives. It should call <code>start_call()</code> as described in rule 4 above.</li>
+  <li><code>ReceiverSetup</code> is created as soon as your <code>get_passcode</code> returns the passcode, and is given that passcode. It should send its first JOIN from <code>__init__</code>, since nothing else calls it until a packet arrives. The simulator calls its <code>on_packet</code> when an ACCEPT arrives. It should call <code>start_call(rate_kbps, rtt_ms)</code> with the values from the first ACCEPT, as described in rule 3 above.</li>
+  <li>The simulator passes setup messages, meaning packets whose first byte is <code>0x01</code>, <code>0x02</code> or <code>0x03</code>, to the <code>on_packet</code> method of your <code>SenderSetup</code> or <code>ReceiverSetup</code>, and all other packets to the <code>on_packet</code> method of your <code>Sender</code> or <code>Receiver</code>.</li>
+  <li>Calling <code>start_call</code> more than once has no effect after the first time.</li>
+  <li>If the camera has not started within 5 seconds, the simulator marks the call as failed, and no frames are shown.</li>
+</ul>
+<p><strong>What to watch for.</strong> Make sure you follow the protocol precisely, as we will test your <code>SenderSetup</code> with our own <code>ReceiverSetup</code>, and vice versa. The handshake should complete even when any of the setup messages are lost, including CONFIRM. Your sender's side should never start the call before a matching CONFIRM arrives, and a receiver with the wrong passcode should never get a call started.</p>
+<p><strong>Testing these cases.</strong> A test file (Section 3) can also have a <code>setup</code> section that makes the handshake face these situations, for example <code>{"setup": {"lose": {"JOIN": 2, "CONFIRM": 1}}}</code>. It can have:</p>
+<ul>
+  <li><code>"lose"</code>: how many of the first JOIN, ACCEPT and CONFIRM messages the network should lose. When a test file has <code>"lose"</code>, the network loses only these messages and no other packets.</li>
+  <li><code>"wrong_passcode"</code>: <code>true</code> to give your <code>ReceiverSetup</code> a wrong passcode, so the call should never start.</li>
+</ul>
+
+<h2>5. Part C: The call itself</h2>
+
+<p>In this part, you implement the sender and receiver logic for transferring the actual video data. You implement the sender's side in the <code>Sender</code> class, and the receiver's side in the <code>Receiver</code> class, both in <code>call.py</code>.</p>
+
+<h3>5.1 The video</h3>
+<p>The sender's side does not have a real camera. Instead, the simulator plays a 30-second excerpt from <em>Big Buck Bunny</em><sup><a href="#fn1" id="fnref1">1</a></sup>, an open animated film, as if a camera were capturing it. Your code and your score do not depend on what the frames show, only on their sizes, so any other video would work the same way.</p>
+<ul>
+  <li>The camera produces 25 frames per second, one every 40 ms.</li>
+  <li>Each frame is available at <strong>4 quality levels</strong>, from 0 (lowest) to 3 (highest). The same frame at a higher quality level looks better and is represented with more bytes. Every frame at a given level has the same size: 1500, 3500, 8500 and 17000 bytes for levels 0 to 3. You can also find it with <code>len(frame.data[level])</code>.</li>
+  <li>Your sender decides which level to send for each frame.</li>
+</ul>
+
+<p>A <code>frame</code> object has the following fields:</p>
+<ul>
+  <li><code>frame.id</code>: the frame's position in the video. The camera numbers frames in the order it captures them: the first frame of the call is 0, the next is 1, and so on.</li>
+  <li><code>frame.time</code>: when the frame was captured, in ms. You can assume the sender's and receiver's clocks are fully synchronized.</li>
+  <li><code>frame.data</code>: the frame's data at each quality level. <code>frame.data[level]</code> is the frame at that level, ready to split into packets.</li>
+</ul>
+
+<h3>5.2 What to implement</h3>
+<p>Implement the sender and the receiver in <code>call.py</code>:</p>
+<pre><code>class Sender:
+    def __init__(self, net, rate_kbps, rtt_ms): ...
+    def on_frame(self, frame): ...
+    def on_packet(self, pkt): ...
+
+class Receiver:
+    def __init__(self, net, rate_kbps, rtt_ms, player): ...
+    def on_packet(self, pkt): ...</code></pre>
+<ul>
+  <li>The simulator creates your <code>Sender</code> when your <code>SenderSetup</code> calls <code>start_call()</code>, and your <code>Receiver</code> when your <code>ReceiverSetup</code> calls <code>start_call(rate_kbps, rtt_ms)</code> (Section 4). Each is given the rate and round-trip propagation delay at the start of the call. Note that these are only the values at the start of the call: the rate and the delay can change during the call.</li>
+  <li>The simulator calls your <code>Sender</code>'s <code>on_frame(frame)</code> every time the camera has a new frame. It calls your <code>Sender</code>'s <code>on_packet(pkt)</code> when a packet from your <code>Receiver</code> arrives, and your <code>Receiver</code>'s <code>on_packet(pkt)</code> when a packet from your <code>Sender</code> arrives.</li>
+  <li>Your <code>Receiver</code> can hand a frame to the player with <code>player.show(frame_id, data)</code>.</li>
+  <li>You decide what goes in the packets your <code>Sender</code> and <code>Receiver</code> send, both what metadata they carry and the payload. The only restriction is that the first byte must not be <code>0x01</code>, <code>0x02</code> or <code>0x03</code>, because the simulator uses it to tell setup messages apart.</li>
+  <li>The simulator runs the sender's side (<code>SenderSetup</code>, <code>Sender</code>) and the receiver's side (<code>get_passcode</code>, <code>ReceiverSetup</code>, <code>Receiver</code>) as if they were on separate machines. Each side gets its own copy of your files, so a variable set on one side is not visible on the other, and the two sides can only communicate through the network.</li>
+  <li>Your code should only use what the simulator gives it: its arguments, <code>net</code>, <code>clock</code>, the frames and the packets. For example, it should not open or read any files, such as the scenario files or the video clip.</li>
+  <li>Put all your code in <code>join.py</code>, <code>setup.py</code> and <code>call.py</code>. The simulator only loads these three files, so code in other files you create will not be found when we grade your solution.</li>
+  <li>Each run must finish within 60 seconds of real time. Normal runs should only take a few seconds.</li>
+</ul>
+<h3>5.3 The player and what the viewer sees</h3>
+<p>The player works in the following way:</p>
+<ul>
+  <li>Each frame your receiver hands over with <code>player.show</code> goes to the back of the player's <strong>buffer</strong>.</li>
+  <li>Every 1/25 of a second (40 ms), the player takes the frame at the front of its buffer and shows it. If the buffer is empty, the frame already on screen stays there.</li>
+  <li>The player shows frames in the order it gets them. It will not reorder or skip a frame on its own.</li>
+  <li>Say the call starts at time 0. The camera, on the sender's side, captures frames at 0, 40, 80, 120, &hellip; ms. The player, on the receiver's side, refreshes and takes the next frame from its buffer at 40, 80, 120, 160, &hellip; ms. So a frame captured at time <em>x</em> has its last chance at the player's refresh at <em>x</em> + 200 ms: it is shown in time if, by then, it is the next frame in the buffer, even if your receiver hands it over at that very moment.</li>
+</ul>
+<p><strong>When and whether to hand a frame to the player is up to your receiver.</strong> It can hand a frame over the moment it is received, hold it back and hand it over later, or never hand it over at all.</p>
+<p><strong>How the simulator classifies each frame.</strong> The simulator knows when each frame was captured, and when it is shown to the viewer. It classifies each frame as one of the following:</p>
+<ul>
+  <li><strong>Shown in time:</strong> on screen within 200 ms of being captured.</li>
+  <li><strong>Shown late:</strong> on screen, but more than 200 ms after being captured (i.e., a lag).</li>
+  <li><strong>Not shown:</strong> never on screen during the call, for example because it was never handed to the player.</li>
+</ul>
+<h3>5.4 The score</h3>
+<p>The simulator gives you a score for the call. The score has three parts.</p>
+<p><strong>Quality.</strong> Quality is computed as the average quality over all the frames of the call. For each frame, the quality is (level + 1) / 4 if the frame was shown in time, and 0 otherwise. So a frame shown in time at level 3 is worth 1, and at level 0 is worth 0.25.</p>
+<p><strong>Glitches.</strong> A glitch is a moment when the player shows something the viewer should never see:</p>
+<ul>
+  <li>a frame whose bytes do not match the frame at any of the four levels (the network never corrupts packets, so this only happens if your code puts a frame together wrong);</li>
+  <li>a frame shown again after it was already shown;</li>
+  <li>a frame older than one already shown, so the video jumps backwards.</li>
+</ul>
+<p>Glitches are counted separately from how frames are classified. For example, if your receiver hands frame 10 to the player twice, frame 10 is classified by its first showing, and the second showing is a glitch. The <strong>glitch fraction</strong> is the number of glitches divided by the number of frames in the call.</p>
+<p><strong>Freezes.</strong> When the player has nothing new to show, the frame already on screen stays there. Missing one or two frames is hard to notice, but missing several in a row is a visible freeze. We use the definition of a freeze from WebRTC, the technology most video calls are built on:</p>
+<ul>
+  <li>Normally, a new frame appears every 40 ms. The picture is frozen when no new frame appears for at least 150 ms longer than that, so for at least 190 ms. At 25 frames per second, this happens when the player has nothing new to show 4 or more times in a row.</li>
+  <li>A freeze lasts from the moment the last new frame appeared until the next new frame appears. A glitch does not count as a new frame. For example, if a new frame appears at 1000 ms and the next one at 1300 ms, the picture was frozen for 300 ms. The <strong>freeze time</strong> of the call is the total length of all its freezes.</li>
+  <li>The <strong>freeze fraction</strong> is the freeze time divided by the length of the call. Here the call is measured from 200 ms after the first frame is captured to 200 ms after the last frame is captured. This includes the start of the call: if the first frames take too long to reach the screen, that counts as a freeze too.</li>
+</ul>
+<p>Putting the three parts together:</p>
+<pre><code>score = quality &minus; 5 &times; glitch fraction &minus; freeze fraction</code></pre>
+<p>A perfect call scores 1, and a call that never starts scores &minus;1. Glitches count five times: showing one frame at the wrong moment costs as much as losing five frames at the highest quality.</p>
+
+<h3>5.5 Scenarios and the baseline</h3>
+<p>The practice scenarios in <code>scenarios/</code> cover different kinds of network conditions during a call, e.g., random loss, heavy loss, bursts of loss, reordering, a low rate, a rate that drops, rises or keeps changing during the call, a delay that jumps during the call, and a mix of these. You can open these files yourself to see each scenario's settings, but you cannot open and read them in your code. We grade your solution both on these scenarios and on <strong>hidden scenarios</strong> that are conceptually similar.</p>
+<p>The baseline solution in the starter code works in the following way:</p>
+<ul>
+  <li><strong>Quality:</strong> the sender picks the highest level that fits within the starting rate, and never changes it.</li>
+  <li><strong>Sending:</strong> it splits each frame into packets and sends each packet once.</li>
+  <li><strong>Receiving:</strong> it hands a frame to the player as soon as all its packets arrive.</li>
+</ul>
+<p>The baseline never recovers anything that is lost and never reacts to the network. It is only meant as a starting point.</p>
+<p><strong>Output and logs.</strong> After every run, <code>sim.py</code> prints how joining and setup went, the score, how many frames were shown in time, shown late or not shown, how many were shown at each quality level, the lag from capture to screen, the glitches and freezes, and, for debugging, how many packets were sent in each direction and how many were lost or dropped waiting in line. It also writes these files:</p>
+<ul>
+  <li><code>logs/&lt;scenario&gt;-&lt;name&gt;.json</code>: what was on screen at every moment of the call.</li>
+  <li><code>logs/&lt;scenario&gt;-&lt;name&gt;-packets.csv</code>: every packet, with when it was sent, in which direction, its size and first byte, and whether it arrived (and when), was lost, or was dropped waiting in line. You can open it in a spreadsheet.</li>
+  <li><code>history.csv</code>, next to <code>sim.py</code>: a record of all your runs. Each line includes when the run happened, which scenario and test files were used, the score (or that the run stopped with an error), and some information about your code. <strong><u>Keep this file and submit it with your solution (Section 8).</u></strong></li>
+</ul>
+<p><code>&lt;name&gt;</code> is the name of the folder the <code>call.py</code> you ran is in: <code>baseline</code> when you run the baseline, and the name of your assignment folder when you run your own code. <code>replay.py</code> turns one or more of the first kind of log into a page that plays the video the viewer saw in each run, side by side, so you can see where your solution freezes or glitches and how it compares with another run. For example, if your assignment folder is named <code>code</code>, as in the starter code:</p>
+<pre><code>python3 replay.py logs/bursty_loss-code.json logs/bursty_loss-baseline.json</code></pre>
+<p>Then open <code>replay.html</code> in a browser.</p>
+
+<h2>6. The report</h2>
+<p><strong>Questions.</strong> Your report should answer the following questions. For each question, the answer should include pointers to relevant portions of the code.</p>
+<ol>
+  <li><strong>Setup timers.</strong> How long do your setup timers wait before sending again, on each side, and why? What happens when each of the three setup messages is lost?</li>
+  <li><strong>Packet format.</strong> What is in your packet header in Part C, and why did you include each field?</li>
+  <li><strong>Loss.</strong> When a packet is lost, what do your sender and receiver do?</li>
+  <li><strong>Playback.</strong> When does your receiver hand frames to the player? If it skips any frames, under what conditions does it do so and why?</li>
+  <li><strong>Quality.</strong> How does your sender choose the quality level?</li>
+  <li><strong>What did not work.</strong> Describe two things you tried that made the call score worse, and why those design decisions had that effect.</li>
+  <li><strong>The worst case for your solution.</strong> Describe, in detail, a scenario in which your solution would do its worst, and why that is the case.</li>
+</ol>
+<p><strong>Format.</strong> Your report should be a PDF of at most 3 letter-size pages, with an 11-point font or larger and margins of at least 1 inch (2.5 cm) on all sides. Number each answer like its question. Note that figures and tables count toward the 3 pages.</p>
+
+
+<h2>7. Grading</h2>
+<div class="table-wrap">
+<table style="width: auto">
+  <tr><th>What</th><th>Weight</th></tr>
+  <tr><td>Joining (Part A)</td><td>10%</td></tr>
+  <tr><td>Setting up (Part B)</td><td>15%</td></tr>
+  <tr><td>Correctness of the call (Part C)</td><td>15%</td></tr>
+  <tr><td>Performance of the call (Part C)</td><td>35%</td></tr>
+  <tr><td>Report</td><td>25%</td></tr>
+  <tr><td>Bonus</td><td>+15%</td></tr>
+</table>
+</div>
+<p><strong>Joining (Part A).</strong> We test that your <code>get_passcode</code> works correctly under the situations described under &ldquo;What to watch for&rdquo; in Section 3.</p>
+<p><strong>Setting up (Part B).</strong> We test your <code>SenderSetup</code> with our own <code>ReceiverSetup</code>, and your <code>ReceiverSetup</code> with our own <code>SenderSetup</code>, under the situations described under &ldquo;What to watch for&rdquo; in Section 4.</p>
+<p><strong>The call itself (Part C).</strong> We grade Part C with our own join and setup code, so a problem in Part A or Part B will not cost you marks in Part C.</p>
+<p><em>Scenarios.</em> We run your call on two sets of scenarios:</p>
+<ul>
+  <li>The practice scenarios in <code>scenarios/</code>. Note that when grading, we run them under different names and random seeds, so do not hard code these scenarios into your code.</li>
+  <li>Hidden scenarios that are conceptually similar (loss, rate changes, delay changes, etc.) but with different parameters.</li>
+</ul>
+<p><em>Correctness.</em> Correctness is tested on the practice scenarios. Specifically, make sure that:</p>
+<ol>
+  <li>Your code can get through the call in every practice scenario without an error.</li>
+  <li>It never sends a packet larger than the MTU.</li>
+  <li>It causes no glitches (see the definition of glitches in Section 5.4).</li>
+  <li>Each run finishes within 60 seconds of <strong>wall clock time</strong>. Normal runs should only take a few seconds, so this limit is there to catch code that hangs or is extremely slow.</li>
+  <li>It shows all the frames in time on the <code>clean</code> scenario (i.e., <code>sim.py</code> prints <code>750 shown in time, 0 shown late, 0 not shown</code>).</li>
+</ol>
+<p><em>Performance.</em> We test performance on both the practice and the hidden scenarios in the following way. For each scenario, we calculate (your score &minus; baseline score) / (reference score &minus; baseline score). Matching or scoring below the baseline will not get you any marks, matching or beating our reference solution will get you full marks, and scores in between earn marks in proportion. On a scenario where the reference solution does not score higher than the baseline, such as <code>clean</code>, you earn full marks if you match the reference solution and 0 otherwise.</p>
+<p>You can find the scores for the baseline and our reference solution on the practice scenarios in the table below. You can also get the baseline's scores yourself by running it (Section 5.5).</p>
+<div class="table-wrap">
+<table style="width: auto">
+  <tr><th>Scenario</th><th>Baseline</th><th>Reference solution</th></tr>
+  <tr><td><code>bursty_loss</code></td><td>0.799</td><td>0.912</td></tr>
+  <tr><td><code>clean</code></td><td>1.000</td><td>1.000</td></tr>
+  <tr><td><code>delay_jump</code></td><td>0.777</td><td>0.902</td></tr>
+  <tr><td><code>heavy_loss</code></td><td>&minus;0.557</td><td>0.728</td></tr>
+  <tr><td><code>mixed</code></td><td>&minus;0.113</td><td>0.594</td></tr>
+  <tr><td><code>random_loss</code></td><td>0.763</td><td>0.992</td></tr>
+  <tr><td><code>rate_drop</code></td><td>&minus;0.199</td><td>0.670</td></tr>
+  <tr><td><code>rate_rise</code></td><td>0.500</td><td>0.798</td></tr>
+  <tr><td><code>rate_swings</code></td><td>0.023</td><td>0.676</td></tr>
+  <tr><td><code>reorder</code></td><td>0.489</td><td>0.637</td></tr>
+</table>
+</div>
+<p><strong>Bonus.</strong> The 10 students with the best average score across all scenarios will get a bonus of 15%.</p>
+
+<h2>8. What to submit</h2>
+<p>Submit the following, with exactly these file names, in a zip file on LEARN:</p>
+<ul>
+  <li><code>join.py</code>, <code>setup.py</code> and <code>call.py</code>;</li>
+  <li><code>report.pdf</code>;</li>
+  <li><code>history.csv</code>.</li>
+</ul>
+
+
+<h2>9. Frequently asked questions</h2>
+<p><strong>Can my code print things, for example to debug?</strong> Yes. Your code can print to standard output or standard error. Printing does not affect the simulation or your score.</p>
+<p><strong>Should <code>get_passcode</code> wait until the join server closes the stream?</strong> No. Return as soon as you have the join server's whole reply.</p>
+<p><strong>How do I set a timer to call one of my methods?</strong> Pass the method to the timer, without calling it: <code>clock.set_timer(100, self.resend)</code>. The simulator will call <code>self.resend</code> when the timer expires. A common mistake is to write <code>clock.set_timer(100, self.resend())</code>, which calls <code>self.resend</code> right away and passes its result to <code>set_timer</code>.</p>
+<p><strong>How do I check a packet's first byte?</strong> <code>pkt[0]</code> gives the first byte as an <code>int</code>, so you can compare it with a number, for example <code>pkt[0] == 0x01</code>. <code>pkt[:1]</code> gives the first byte as a <code>bytes</code> object of length 1, so you can compare it with bytes, for example <code>pkt[:1] == b"\x01"</code>. A common mistake is to compare <code>pkt[0]</code> with <code>b"\x01"</code>. This is always false, because an <code>int</code> is never equal to a <code>bytes</code> object, and Python does not raise an error to warn you.</p>
+<p><strong>Where can I learn about bytes and how to work with them?</strong> Check the Python documentation for <a href="https://docs.python.org/3/library/stdtypes.html#binary-sequence-types-bytes-bytearray-memoryview"><code>bytes</code> and <code>bytearray</code></a>, the <a href="https://docs.python.org/3/library/struct.html"><code>struct</code> module</a> for turning numbers into bytes and back, as the baseline does for its header, and <a href="https://docs.python.org/3/library/stdtypes.html#str.encode"><code>str.encode</code></a> and <a href="https://docs.python.org/3/library/stdtypes.html#bytes.decode"><code>bytes.decode</code></a> for turning strings into bytes and back.</p>
+<p><strong>What type is <code>frame.time</code>?</strong> A <code>float</code>, in ms, not an <code>int</code>.</p>
+<p><strong>Does the time spent joining and setting up the call count against my score?</strong> No. The camera starts when the call starts, so no frames are missed while joining and setting up. What matters is that the call starts within 5 seconds.</p>
+<p><strong>Is the <code>rtt_ms</code> given to my code one-way or round trip?</strong> Round trip. It is the propagation delay to the other side and back. The link propagation delay described in Section 2 is half of <code>rtt_ms</code> at the start of the call. It does not include the time to transmit a packet, the time it waits in line, or jitter.</p>
+<p><strong>Is the passcode a string or bytes?</strong> A string of letters and digits: <code>get_passcode</code> returns it as a <code>str</code>, and it is given to your setup classes as a <code>str</code>. In the join server's reply and in JOIN, the passcode is represented as a <code>bytes</code> object: the ASCII bytes of the string.</p>
+<p><strong>Should my <code>ReceiverSetup</code> stop sending JOIN if the passcode is wrong?</strong> It does not need to. With a wrong passcode, the call should never start, and the simulator stops the run after 5 seconds. When <code>sim.py</code> runs a test file with a wrong passcode, it tells you whether your code behaved correctly.</p>
+<p><strong>Do <code>rate_kbps</code> and <code>rtt_ms</code> change during the call to reflect the current rate and RTT?</strong> No, they only represent these values at the start of the call. The link's rate and delay can change during the call, so you will need to measure them if you want to have the current values.</p>
+<p><strong>What does kbps mean?</strong> Kilobits per second, where a kilobit is 1000 bits.</p>
+<p><strong>Is there a limit on how many packets my code can send, for example acknowledgements or retransmissions?</strong> No, but if you send more packets to the link than it can carry at that moment based on its rate, the packets will have to wait in line, and may get dropped if the line gets too long (Section 2).</p>
+
+<hr>
+<p class="footnote" id="fn1"><sup>1</sup> &copy; copyright 2008, Blender Foundation / <a href="https://www.bigbuckbunny.org">www.bigbuckbunny.org</a>, licensed under <a href="https://creativecommons.org/licenses/by/3.0/">Creative Commons Attribution 3.0</a>. We use the excerpt from 1:00 to 1:30, scaled down and recompressed at four sizes, one for each quality level. <a href="#fnref1">&#8617;</a></p>
+
+</body>
+</html>

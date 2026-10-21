@@ -1,0 +1,13 @@
+These frames are from Big Buck Bunny.
+
+  (c) copyright 2008, Blender Foundation / www.bigbuckbunny.org
+  Licensed under the Creative Commons Attribution 3.0 license:
+  https://creativecommons.org/licenses/by/3.0/
+
+The licence and this attribution text are given by the Blender Foundation at
+https://peach.blender.org/about/
+
+Changes: a 30-second excerpt (1:00 to 1:30) of BigBuckBunny_640x360.m4v from
+https://download.blender.org/peach/bigbuckbunny_movies/, at 25 frames per
+second, scaled down and recompressed as JPEG at four sizes (one per quality
+level), each padded to a fixed number of bytes.

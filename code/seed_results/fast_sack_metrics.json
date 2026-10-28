@@ -1,0 +1,579 @@
+[
+  {
+    "scenario": "reorder-recovery-seed-01",
+    "implementation": "before",
+    "metrics": {
+      "retransmissions": 54,
+      "retransmissions_timeout": 13,
+      "abandoned_deadline": 670,
+      "grace_checks_scheduled": 422,
+      "retransmissions_sack_gap": 41,
+      "grace_checks_resolved_by_ack": 26
+    },
+    "attempts": {
+      "1": 54
+    },
+    "wall_seconds": 0.7169550830003573
+  },
+  {
+    "scenario": "reorder-recovery-seed-01",
+    "implementation": "fast_sack",
+    "metrics": {
+      "retransmissions": 13,
+      "retransmissions_timeout": 13,
+      "abandoned_deadline": 445
+    },
+    "attempts": {
+      "1": 13
+    },
+    "wall_seconds": 0.17784541699802503
+  },
+  {
+    "scenario": "reorder-recovery-seed-02",
+    "implementation": "before",
+    "metrics": {
+      "retransmissions": 62,
+      "retransmissions_timeout": 35,
+      "abandoned_deadline": 513,
+      "grace_checks_scheduled": 325,
+      "retransmissions_sack_gap": 27,
+      "grace_checks_resolved_by_ack": 19
+    },
+    "attempts": {
+      "1": 62
+    },
+    "wall_seconds": 0.1516177089943085
+  },
+  {
+    "scenario": "reorder-recovery-seed-02",
+    "implementation": "fast_sack",
+    "metrics": {
+      "retransmissions": 15,
+      "retransmissions_timeout": 15,
+      "abandoned_deadline": 412
+    },
+    "attempts": {
+      "1": 15
+    },
+    "wall_seconds": 0.1547543329943437
+  },
+  {
+    "scenario": "reorder-recovery-seed-03",
+    "implementation": "before",
+    "metrics": {
+      "retransmissions": 67,
+      "retransmissions_timeout": 22,
+      "abandoned_deadline": 974,
+      "grace_checks_scheduled": 686,
+      "retransmissions_sack_gap": 45,
+      "grace_checks_resolved_by_ack": 33
+    },
+    "attempts": {
+      "1": 67
+    },
+    "wall_seconds": 0.19236108400218654
+  },
+  {
+    "scenario": "reorder-recovery-seed-03",
+    "implementation": "fast_sack",
+    "metrics": {
+      "retransmissions": 22,
+      "retransmissions_timeout": 22,
+      "abandoned_deadline": 807
+    },
+    "attempts": {
+      "1": 22
+    },
+    "wall_seconds": 0.20195495799998753
+  },
+  {
+    "scenario": "reorder-recovery-seed-04",
+    "implementation": "before",
+    "metrics": {
+      "retransmissions": 123,
+      "retransmissions_timeout": 68,
+      "abandoned_deadline": 875,
+      "grace_checks_scheduled": 547,
+      "retransmissions_sack_gap": 55,
+      "grace_checks_resolved_by_ack": 32
+    },
+    "attempts": {
+      "1": 123
+    },
+    "wall_seconds": 0.32395145799819147
+  },
+  {
+    "scenario": "reorder-recovery-seed-04",
+    "implementation": "fast_sack",
+    "metrics": {
+      "retransmissions": 51,
+      "retransmissions_timeout": 51,
+      "abandoned_deadline": 411
+    },
+    "attempts": {
+      "1": 51
+    },
+    "wall_seconds": 0.26837662500474835
+  },
+  {
+    "scenario": "reorder-recovery-seed-05",
+    "implementation": "before",
+    "metrics": {
+      "retransmissions": 102,
+      "retransmissions_timeout": 58,
+      "abandoned_deadline": 498,
+      "grace_checks_scheduled": 313,
+      "retransmissions_sack_gap": 44,
+      "grace_checks_resolved_by_ack": 32
+    },
+    "attempts": {
+      "1": 102
+    },
+    "wall_seconds": 0.15700141600245843
+  },
+  {
+    "scenario": "reorder-recovery-seed-05",
+    "implementation": "fast_sack",
+    "metrics": {
+      "retransmissions": 67,
+      "retransmissions_timeout": 67,
+      "abandoned_deadline": 390
+    },
+    "attempts": {
+      "1": 67
+    },
+    "wall_seconds": 0.15360462499666028
+  },
+  {
+    "scenario": "heavy_loss-recovery-seed-01",
+    "implementation": "before",
+    "metrics": {
+      "grace_checks_scheduled": 1328,
+      "retransmissions": 1160,
+      "retransmissions_sack_gap": 971,
+      "retransmissions_timeout": 189,
+      "grace_checks_resolved_by_ack": 357,
+      "abandoned_deadline": 181
+    },
+    "attempts": {
+      "1": 1160
+    },
+    "wall_seconds": 0.41313029199955054
+  },
+  {
+    "scenario": "heavy_loss-recovery-seed-01",
+    "implementation": "fast_sack",
+    "metrics": {
+      "retransmissions": 1133,
+      "retransmissions_sack_gap": 742,
+      "retransmissions_timeout": 391,
+      "abandoned_deadline": 199
+    },
+    "attempts": {
+      "1": 1133
+    },
+    "wall_seconds": 0.40397637500427663
+  },
+  {
+    "scenario": "heavy_loss-recovery-seed-02",
+    "implementation": "before",
+    "metrics": {
+      "grace_checks_scheduled": 1311,
+      "retransmissions": 1199,
+      "retransmissions_sack_gap": 982,
+      "grace_checks_resolved_by_ack": 329,
+      "abandoned_deadline": 190,
+      "retransmissions_timeout": 217
+    },
+    "attempts": {
+      "1": 1199
+    },
+    "wall_seconds": 0.3802940839959774
+  },
+  {
+    "scenario": "heavy_loss-recovery-seed-02",
+    "implementation": "fast_sack",
+    "metrics": {
+      "retransmissions": 1199,
+      "retransmissions_sack_gap": 770,
+      "abandoned_deadline": 199,
+      "retransmissions_timeout": 429
+    },
+    "attempts": {
+      "1": 1199
+    },
+    "wall_seconds": 0.42409683300502365
+  },
+  {
+    "scenario": "heavy_loss-recovery-seed-03",
+    "implementation": "before",
+    "metrics": {
+      "grace_checks_scheduled": 1333,
+      "retransmissions": 1196,
+      "retransmissions_sack_gap": 997,
+      "grace_checks_resolved_by_ack": 336,
+      "abandoned_deadline": 214,
+      "retransmissions_timeout": 199
+    },
+    "attempts": {
+      "1": 1196
+    },
+    "wall_seconds": 0.3695717919981689
+  },
+  {
+    "scenario": "heavy_loss-recovery-seed-03",
+    "implementation": "fast_sack",
+    "metrics": {
+      "retransmissions": 1173,
+      "retransmissions_sack_gap": 799,
+      "retransmissions_timeout": 374,
+      "abandoned_deadline": 217
+    },
+    "attempts": {
+      "1": 1173
+    },
+    "wall_seconds": 0.36530395800218685
+  },
+  {
+    "scenario": "heavy_loss-recovery-seed-04",
+    "implementation": "before",
+    "metrics": {
+      "grace_checks_scheduled": 1344,
+      "grace_checks_resolved_by_ack": 331,
+      "retransmissions": 1204,
+      "retransmissions_sack_gap": 1013,
+      "retransmissions_timeout": 191,
+      "abandoned_deadline": 222
+    },
+    "attempts": {
+      "1": 1204
+    },
+    "wall_seconds": 0.40865479199419497
+  },
+  {
+    "scenario": "heavy_loss-recovery-seed-04",
+    "implementation": "fast_sack",
+    "metrics": {
+      "retransmissions": 1195,
+      "retransmissions_sack_gap": 808,
+      "retransmissions_timeout": 387,
+      "abandoned_deadline": 236
+    },
+    "attempts": {
+      "1": 1195
+    },
+    "wall_seconds": 0.3406730420028907
+  },
+  {
+    "scenario": "heavy_loss-recovery-seed-05",
+    "implementation": "before",
+    "metrics": {
+      "grace_checks_scheduled": 1321,
+      "retransmissions": 1214,
+      "retransmissions_sack_gap": 1013,
+      "abandoned_deadline": 205,
+      "grace_checks_resolved_by_ack": 308,
+      "retransmissions_timeout": 201
+    },
+    "attempts": {
+      "1": 1214
+    },
+    "wall_seconds": 0.3681884170000558
+  },
+  {
+    "scenario": "heavy_loss-recovery-seed-05",
+    "implementation": "fast_sack",
+    "metrics": {
+      "retransmissions": 1213,
+      "retransmissions_sack_gap": 821,
+      "retransmissions_timeout": 392,
+      "abandoned_deadline": 197
+    },
+    "attempts": {
+      "1": 1213
+    },
+    "wall_seconds": 0.36415737499919487
+  },
+  {
+    "scenario": "bursty_loss-recovery-seed-01",
+    "implementation": "before",
+    "metrics": {
+      "grace_checks_scheduled": 625,
+      "retransmissions": 390,
+      "retransmissions_sack_gap": 185,
+      "abandoned_deadline": 471,
+      "grace_checks_resolved_by_ack": 428,
+      "retransmissions_timeout": 205
+    },
+    "attempts": {
+      "1": 390
+    },
+    "wall_seconds": 0.3376397090032697
+  },
+  {
+    "scenario": "bursty_loss-recovery-seed-01",
+    "implementation": "fast_sack",
+    "metrics": {
+      "abandoned_deadline": 507,
+      "retransmissions": 347,
+      "retransmissions_sack_gap": 142,
+      "retransmissions_timeout": 205
+    },
+    "attempts": {
+      "1": 347
+    },
+    "wall_seconds": 0.34200516599958064
+  },
+  {
+    "scenario": "bursty_loss-recovery-seed-02",
+    "implementation": "before",
+    "metrics": {
+      "grace_checks_scheduled": 693,
+      "retransmissions": 431,
+      "retransmissions_sack_gap": 252,
+      "grace_checks_resolved_by_ack": 421,
+      "abandoned_deadline": 583,
+      "retransmissions_timeout": 179
+    },
+    "attempts": {
+      "1": 431
+    },
+    "wall_seconds": 0.3483055000033346
+  },
+  {
+    "scenario": "bursty_loss-recovery-seed-02",
+    "implementation": "fast_sack",
+    "metrics": {
+      "retransmissions": 383,
+      "retransmissions_sack_gap": 195,
+      "abandoned_deadline": 625,
+      "retransmissions_timeout": 188
+    },
+    "attempts": {
+      "1": 383
+    },
+    "wall_seconds": 0.34338737500365824
+  },
+  {
+    "scenario": "bursty_loss-recovery-seed-03",
+    "implementation": "before",
+    "metrics": {
+      "abandoned_deadline": 549,
+      "grace_checks_scheduled": 698,
+      "retransmissions": 412,
+      "retransmissions_sack_gap": 231,
+      "grace_checks_resolved_by_ack": 425,
+      "retransmissions_timeout": 181
+    },
+    "attempts": {
+      "1": 412
+    },
+    "wall_seconds": 0.33709216699935496
+  },
+  {
+    "scenario": "bursty_loss-recovery-seed-03",
+    "implementation": "fast_sack",
+    "metrics": {
+      "abandoned_deadline": 561,
+      "retransmissions": 384,
+      "retransmissions_sack_gap": 180,
+      "retransmissions_timeout": 204
+    },
+    "attempts": {
+      "1": 384
+    },
+    "wall_seconds": 0.34748299999773735
+  },
+  {
+    "scenario": "bursty_loss-recovery-seed-04",
+    "implementation": "before",
+    "metrics": {
+      "grace_checks_scheduled": 702,
+      "grace_checks_resolved_by_ack": 440,
+      "retransmissions": 442,
+      "retransmissions_sack_gap": 252,
+      "retransmissions_timeout": 190,
+      "abandoned_deadline": 611
+    },
+    "attempts": {
+      "1": 442
+    },
+    "wall_seconds": 0.33524295799725223
+  },
+  {
+    "scenario": "bursty_loss-recovery-seed-04",
+    "implementation": "fast_sack",
+    "metrics": {
+      "retransmissions": 412,
+      "retransmissions_sack_gap": 210,
+      "retransmissions_timeout": 202,
+      "abandoned_deadline": 571
+    },
+    "attempts": {
+      "1": 412
+    },
+    "wall_seconds": 0.333060042001307
+  },
+  {
+    "scenario": "bursty_loss-recovery-seed-05",
+    "implementation": "before",
+    "metrics": {
+      "grace_checks_scheduled": 688,
+      "grace_checks_resolved_by_ack": 431,
+      "retransmissions": 383,
+      "retransmissions_sack_gap": 234,
+      "abandoned_deadline": 552,
+      "retransmissions_timeout": 149
+    },
+    "attempts": {
+      "1": 383
+    },
+    "wall_seconds": 0.3250877919999766
+  },
+  {
+    "scenario": "bursty_loss-recovery-seed-05",
+    "implementation": "fast_sack",
+    "metrics": {
+      "retransmissions": 321,
+      "retransmissions_sack_gap": 199,
+      "abandoned_deadline": 553,
+      "retransmissions_timeout": 122
+    },
+    "attempts": {
+      "1": 321
+    },
+    "wall_seconds": 0.3196788330023992
+  },
+  {
+    "scenario": "mixed-recovery-seed-01",
+    "implementation": "before",
+    "metrics": {
+      "grace_checks_scheduled": 916,
+      "abandoned_deadline": 1280,
+      "grace_checks_resolved_by_ack": 317,
+      "retransmissions": 2,
+      "retransmissions_sack_gap": 2
+    },
+    "attempts": {
+      "1": 2
+    },
+    "wall_seconds": 0.23756445800245274
+  },
+  {
+    "scenario": "mixed-recovery-seed-01",
+    "implementation": "fast_sack",
+    "metrics": {
+      "abandoned_deadline": 727
+    },
+    "attempts": {},
+    "wall_seconds": 0.20500174999324372
+  },
+  {
+    "scenario": "mixed-recovery-seed-02",
+    "implementation": "before",
+    "metrics": {
+      "grace_checks_scheduled": 735,
+      "abandoned_deadline": 3423,
+      "grace_checks_resolved_by_ack": 286,
+      "retransmissions": 1,
+      "retransmissions_sack_gap": 1
+    },
+    "attempts": {
+      "1": 1
+    },
+    "wall_seconds": 0.2547952079985407
+  },
+  {
+    "scenario": "mixed-recovery-seed-02",
+    "implementation": "fast_sack",
+    "metrics": {
+      "abandoned_deadline": 701,
+      "retransmissions": 2,
+      "retransmissions_sack_gap": 2
+    },
+    "attempts": {
+      "1": 2
+    },
+    "wall_seconds": 0.20277129099849844
+  },
+  {
+    "scenario": "mixed-recovery-seed-03",
+    "implementation": "before",
+    "metrics": {
+      "grace_checks_scheduled": 869,
+      "abandoned_deadline": 1233,
+      "grace_checks_resolved_by_ack": 294,
+      "retransmissions": 4,
+      "retransmissions_sack_gap": 4
+    },
+    "attempts": {
+      "1": 4
+    },
+    "wall_seconds": 0.2296567499943194
+  },
+  {
+    "scenario": "mixed-recovery-seed-03",
+    "implementation": "fast_sack",
+    "metrics": {
+      "abandoned_deadline": 699,
+      "retransmissions": 1,
+      "retransmissions_sack_gap": 1
+    },
+    "attempts": {
+      "1": 1
+    },
+    "wall_seconds": 0.27149554200150305
+  },
+  {
+    "scenario": "mixed-recovery-seed-04",
+    "implementation": "before",
+    "metrics": {
+      "grace_checks_scheduled": 934,
+      "abandoned_deadline": 1296,
+      "grace_checks_resolved_by_ack": 313,
+      "retransmissions": 1,
+      "retransmissions_sack_gap": 1
+    },
+    "attempts": {
+      "1": 1
+    },
+    "wall_seconds": 0.2692062080022879
+  },
+  {
+    "scenario": "mixed-recovery-seed-04",
+    "implementation": "fast_sack",
+    "metrics": {
+      "abandoned_deadline": 624
+    },
+    "attempts": {},
+    "wall_seconds": 0.2299343749982654
+  },
+  {
+    "scenario": "mixed-recovery-seed-05",
+    "implementation": "before",
+    "metrics": {
+      "grace_checks_scheduled": 937,
+      "abandoned_deadline": 1277,
+      "grace_checks_resolved_by_ack": 335,
+      "retransmissions": 8,
+      "retransmissions_sack_gap": 8
+    },
+    "attempts": {
+      "1": 8
+    },
+    "wall_seconds": 0.2324334170043585
+  },
+  {
+    "scenario": "mixed-recovery-seed-05",
+    "implementation": "fast_sack",
+    "metrics": {
+      "abandoned_deadline": 1416,
+      "retransmissions": 1,
+      "retransmissions_sack_gap": 1
+    },
+    "attempts": {
+      "1": 1
+    },
+    "wall_seconds": 0.2879602920002071
+  }
+]

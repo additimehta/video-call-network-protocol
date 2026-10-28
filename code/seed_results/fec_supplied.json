@@ -1,0 +1,72 @@
+[
+  {
+    "scenario": "bursty_loss",
+    "before": 0.7118985313751669,
+    "after": 0.7376097018246551,
+    "glitches": 0,
+    "wall_seconds": 0.8553792500024429
+  },
+  {
+    "scenario": "clean",
+    "before": 1.0,
+    "after": 1.0,
+    "glitches": 0,
+    "wall_seconds": 0.42147504199965624
+  },
+  {
+    "scenario": "delay_jump",
+    "before": 0.8523190921228304,
+    "after": 0.8533173119715175,
+    "glitches": 0,
+    "wall_seconds": 0.41682804199808743
+  },
+  {
+    "scenario": "heavy_loss",
+    "before": 0.4884548286604361,
+    "after": 0.6712389853137517,
+    "glitches": 0,
+    "wall_seconds": 0.39305870899988804
+  },
+  {
+    "scenario": "mixed",
+    "before": 0.5869661771250556,
+    "after": 0.47926034712950605,
+    "glitches": 0,
+    "wall_seconds": 0.3118012089980766
+  },
+  {
+    "scenario": "random_loss",
+    "before": 0.9946666666666667,
+    "after": 1.0,
+    "glitches": 0,
+    "wall_seconds": 0.44174879099955433
+  },
+  {
+    "scenario": "rate_drop",
+    "before": 0.65596261682243,
+    "after": 0.65596261682243,
+    "glitches": 0,
+    "wall_seconds": 0.321063375002268
+  },
+  {
+    "scenario": "rate_rise",
+    "before": 0.7119697374276813,
+    "after": 0.668299510458389,
+    "glitches": 0,
+    "wall_seconds": 0.32536229100151104
+  },
+  {
+    "scenario": "rate_swings",
+    "before": 0.5462247441032488,
+    "after": 0.5241980418335559,
+    "glitches": 0,
+    "wall_seconds": 0.32067299999835086
+  },
+  {
+    "scenario": "reorder",
+    "before": 0.34165776591010233,
+    "after": 0.3886577659101023,
+    "glitches": 0,
+    "wall_seconds": 0.24895945800017216
+  }
+]

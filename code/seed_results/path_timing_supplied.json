@@ -1,0 +1,62 @@
+[
+  {
+    "scenario": "bursty_loss",
+    "before": 0.9256666666666666,
+    "after": 0.9256666666666666,
+    "glitches": 0
+  },
+  {
+    "scenario": "clean",
+    "before": 1.0,
+    "after": 1.0,
+    "glitches": 0
+  },
+  {
+    "scenario": "delay_jump",
+    "before": 0.8246542056074766,
+    "after": 0.8246542056074766,
+    "glitches": 0
+  },
+  {
+    "scenario": "heavy_loss",
+    "before": 0.7476292834890965,
+    "after": 0.7476292834890965,
+    "glitches": 0
+  },
+  {
+    "scenario": "mixed",
+    "before": 0.37711793502447705,
+    "after": 0.37711793502447705,
+    "glitches": 0
+  },
+  {
+    "scenario": "random_loss",
+    "before": 0.9946666666666667,
+    "after": 0.9946666666666667,
+    "glitches": 0
+  },
+  {
+    "scenario": "rate_drop",
+    "before": 0.4637828215398309,
+    "after": 0.4637828215398309,
+    "glitches": 0
+  },
+  {
+    "scenario": "rate_rise",
+    "before": 0.7089537160658657,
+    "after": 0.7089537160658657,
+    "glitches": 0
+  },
+  {
+    "scenario": "rate_swings",
+    "before": 0.31465643079661776,
+    "after": 0.31465643079661776,
+    "glitches": 0
+  },
+  {
+    "scenario": "reorder",
+    "before": 0.4943101913662662,
+    "after": 0.4943101913662662,
+    "glitches": 0
+  }
+]

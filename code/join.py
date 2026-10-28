@@ -19,41 +19,24 @@ def get_passcode(stream, call):
     call_length = len(call_bytes)
     stream.send(b"JOIN " + str(call_length).encode("utf-8") + b" " + call_bytes)
 
-    # receive the response from the join server
     response = b""
-
     while True:
+        parts = response.split(b" ", 2)
+        if len(parts) == 3:
+            message_type, length_bytes, content = parts
+            try:
+                length = int(length_bytes)
+            except ValueError:
+                return None
+
+            if length < 0:
+                return None
+            if len(content) >= length:
+                if message_type == b"OK":
+                    return content[:length].decode("ascii")
+                return None
+
         chunk = stream.recv(1000)
-        if chunk == b"":
-            break
-        response += chunk 
-
-    # parse the response
-    parts = response.split(b" ", 2)
-
-    if(len(parts) != 3):
-        return None;
-
-    msg_type = parts[0]
-    content = parts[2]
-
-    try:
-        length = int(parts[1])
-    except ValueError:
-        return None
-
-    # Check if the response is complete
-    if length < 0 or length != len(content):
-        return None
-
-    if msg_type == b"ERR":
-        return None
-
-    if msg_type == b"OK":
-        return content.decode("utf-8")
-
-    return None
-
-
-
-
+        if not chunk:
+            return None
+        response += chunk

@@ -1,0 +1,114 @@
+[
+  {
+    "scenario": "heavy_loss",
+    "setting": "one_retry",
+    "max_retransmissions": 1,
+    "backoff_factor": 2,
+    "score": 0.84
+  },
+  {
+    "scenario": "heavy_loss",
+    "setting": "two_retries",
+    "max_retransmissions": 2,
+    "backoff_factor": 2,
+    "score": 0.84
+  },
+  {
+    "scenario": "heavy_loss",
+    "setting": "three_retries",
+    "max_retransmissions": 3,
+    "backoff_factor": 2,
+    "score": 0.84
+  },
+  {
+    "scenario": "heavy_loss",
+    "setting": "no_backoff",
+    "max_retransmissions": 2,
+    "backoff_factor": 1,
+    "score": 0.84
+  },
+  {
+    "scenario": "bursty_loss",
+    "setting": "one_retry",
+    "max_retransmissions": 1,
+    "backoff_factor": 2,
+    "score": 0.9333333333333333
+  },
+  {
+    "scenario": "bursty_loss",
+    "setting": "two_retries",
+    "max_retransmissions": 2,
+    "backoff_factor": 2,
+    "score": 0.9333333333333333
+  },
+  {
+    "scenario": "bursty_loss",
+    "setting": "three_retries",
+    "max_retransmissions": 3,
+    "backoff_factor": 2,
+    "score": 0.9333333333333333
+  },
+  {
+    "scenario": "bursty_loss",
+    "setting": "no_backoff",
+    "max_retransmissions": 2,
+    "backoff_factor": 1,
+    "score": 0.9333333333333333
+  },
+  {
+    "scenario": "mixed",
+    "setting": "one_retry",
+    "max_retransmissions": 1,
+    "backoff_factor": 2,
+    "score": 0.5806257231864708
+  },
+  {
+    "scenario": "mixed",
+    "setting": "two_retries",
+    "max_retransmissions": 2,
+    "backoff_factor": 2,
+    "score": 0.5806257231864708
+  },
+  {
+    "scenario": "mixed",
+    "setting": "three_retries",
+    "max_retransmissions": 3,
+    "backoff_factor": 2,
+    "score": 0.5806257231864708
+  },
+  {
+    "scenario": "mixed",
+    "setting": "no_backoff",
+    "max_retransmissions": 2,
+    "backoff_factor": 1,
+    "score": 0.5806257231864708
+  },
+  {
+    "scenario": "reorder",
+    "setting": "one_retry",
+    "max_retransmissions": 1,
+    "backoff_factor": 2,
+    "score": 0.41997863818424563
+  },
+  {
+    "scenario": "reorder",
+    "setting": "two_retries",
+    "max_retransmissions": 2,
+    "backoff_factor": 2,
+    "score": 0.41997863818424563
+  },
+  {
+    "scenario": "reorder",
+    "setting": "three_retries",
+    "max_retransmissions": 3,
+    "backoff_factor": 2,
+    "score": 0.41997863818424563
+  },
+  {
+    "scenario": "reorder",
+    "setting": "no_backoff",
+    "max_retransmissions": 2,
+    "backoff_factor": 1,
+    "score": 0.41997863818424563
+  }
+]

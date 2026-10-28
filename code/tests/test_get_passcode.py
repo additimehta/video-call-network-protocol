@@ -5,6 +5,7 @@ Run from code/: python3 -m unittest discover -s tests -v
 
 import random
 import unittest
+from unittest.mock import Mock
 
 from join import get_passcode
 from sim import JoinStream, message, passcode_for
@@ -18,6 +19,20 @@ class GetPasscodeTests(unittest.TestCase):
 
     def test_whole_reply(self):
         self.check_reply(knobs={"recv_bytes": 1000}, expected=passcode_for("clean"))
+
+    def test_complete_reply_without_server_closing(self):
+        for reply, expected in ((b"OK 4 abcd", "abcd"),
+                                (b"ERR 12 no-such-call", None)):
+            for size in range(1, len(reply) + 1):
+                with self.subTest(reply=reply, size=size):
+                    chunks = [reply[index:index + size]
+                              for index in range(0, len(reply), size)]
+                    stream = Mock()
+                    stream.recv.side_effect = chunks + [
+                        AssertionError("Read after the complete reply")]
+                    self.assertEqual(get_passcode(stream, "clean"), expected)
+                    stream.send.assert_called_once_with(b"JOIN 5 clean")
+                    self.assertEqual(stream.recv.call_count, len(chunks))
 
     def test_every_chunk_size(self):
         # Includes splits inside OK, the two-digit length, and the payload.

@@ -1,0 +1,646 @@
+[
+  {
+    "scenario": "reorder-recovery-seed-01",
+    "implementation": "grace_backoff",
+    "metrics": {
+      "retransmissions": 54,
+      "retransmissions_timeout": 13,
+      "abandoned_deadline": 670,
+      "grace_checks_scheduled": 422,
+      "retransmissions_sack_gap": 41,
+      "grace_checks_resolved_by_ack": 26
+    },
+    "attempts": {
+      "1": 54
+    },
+    "wall_seconds": 0.16140920800171443
+  },
+  {
+    "scenario": "reorder-recovery-seed-02",
+    "implementation": "grace_backoff",
+    "metrics": {
+      "retransmissions": 62,
+      "retransmissions_timeout": 35,
+      "abandoned_deadline": 513,
+      "grace_checks_scheduled": 325,
+      "retransmissions_sack_gap": 27,
+      "grace_checks_resolved_by_ack": 19
+    },
+    "attempts": {
+      "1": 62
+    },
+    "wall_seconds": 0.14568145800149068
+  },
+  {
+    "scenario": "reorder-recovery-seed-03",
+    "implementation": "grace_backoff",
+    "metrics": {
+      "retransmissions": 67,
+      "retransmissions_timeout": 22,
+      "abandoned_deadline": 974,
+      "grace_checks_scheduled": 686,
+      "retransmissions_sack_gap": 45,
+      "grace_checks_resolved_by_ack": 33
+    },
+    "attempts": {
+      "1": 67
+    },
+    "wall_seconds": 0.21022520800033817
+  },
+  {
+    "scenario": "reorder-recovery-seed-04",
+    "implementation": "grace_backoff",
+    "metrics": {
+      "retransmissions": 123,
+      "retransmissions_timeout": 68,
+      "abandoned_deadline": 875,
+      "grace_checks_scheduled": 547,
+      "retransmissions_sack_gap": 55,
+      "grace_checks_resolved_by_ack": 32
+    },
+    "attempts": {
+      "1": 123
+    },
+    "wall_seconds": 0.17000937500051805
+  },
+  {
+    "scenario": "reorder-recovery-seed-05",
+    "implementation": "grace_backoff",
+    "metrics": {
+      "retransmissions": 102,
+      "retransmissions_timeout": 58,
+      "abandoned_deadline": 498,
+      "grace_checks_scheduled": 313,
+      "retransmissions_sack_gap": 44,
+      "grace_checks_resolved_by_ack": 32
+    },
+    "attempts": {
+      "1": 102
+    },
+    "wall_seconds": 0.14442691699878196
+  },
+  {
+    "scenario": "heavy_loss-recovery-seed-01",
+    "implementation": "grace_backoff",
+    "metrics": {
+      "grace_checks_scheduled": 1328,
+      "retransmissions": 1160,
+      "retransmissions_sack_gap": 971,
+      "retransmissions_timeout": 189,
+      "grace_checks_resolved_by_ack": 357,
+      "abandoned_deadline": 181
+    },
+    "attempts": {
+      "1": 1160
+    },
+    "wall_seconds": 0.3516871669999091
+  },
+  {
+    "scenario": "heavy_loss-recovery-seed-02",
+    "implementation": "grace_backoff",
+    "metrics": {
+      "grace_checks_scheduled": 1311,
+      "retransmissions": 1199,
+      "retransmissions_sack_gap": 982,
+      "grace_checks_resolved_by_ack": 329,
+      "abandoned_deadline": 190,
+      "retransmissions_timeout": 217
+    },
+    "attempts": {
+      "1": 1199
+    },
+    "wall_seconds": 0.34541962499861256
+  },
+  {
+    "scenario": "heavy_loss-recovery-seed-03",
+    "implementation": "grace_backoff",
+    "metrics": {
+      "grace_checks_scheduled": 1333,
+      "retransmissions": 1196,
+      "retransmissions_sack_gap": 997,
+      "grace_checks_resolved_by_ack": 336,
+      "abandoned_deadline": 214,
+      "retransmissions_timeout": 199
+    },
+    "attempts": {
+      "1": 1196
+    },
+    "wall_seconds": 0.3424951670021983
+  },
+  {
+    "scenario": "heavy_loss-recovery-seed-04",
+    "implementation": "grace_backoff",
+    "metrics": {
+      "grace_checks_scheduled": 1344,
+      "grace_checks_resolved_by_ack": 331,
+      "retransmissions": 1204,
+      "retransmissions_sack_gap": 1013,
+      "retransmissions_timeout": 191,
+      "abandoned_deadline": 222
+    },
+    "attempts": {
+      "1": 1204
+    },
+    "wall_seconds": 0.3587277080005151
+  },
+  {
+    "scenario": "heavy_loss-recovery-seed-05",
+    "implementation": "grace_backoff",
+    "metrics": {
+      "grace_checks_scheduled": 1321,
+      "retransmissions": 1214,
+      "retransmissions_sack_gap": 1013,
+      "abandoned_deadline": 205,
+      "grace_checks_resolved_by_ack": 308,
+      "retransmissions_timeout": 201
+    },
+    "attempts": {
+      "1": 1214
+    },
+    "wall_seconds": 0.35630850000234204
+  },
+  {
+    "scenario": "bursty_loss-recovery-seed-01",
+    "implementation": "grace_backoff",
+    "metrics": {
+      "grace_checks_scheduled": 625,
+      "retransmissions": 390,
+      "retransmissions_sack_gap": 185,
+      "abandoned_deadline": 471,
+      "grace_checks_resolved_by_ack": 428,
+      "retransmissions_timeout": 205
+    },
+    "attempts": {
+      "1": 390
+    },
+    "wall_seconds": 0.326415999999881
+  },
+  {
+    "scenario": "bursty_loss-recovery-seed-02",
+    "implementation": "grace_backoff",
+    "metrics": {
+      "grace_checks_scheduled": 693,
+      "retransmissions": 431,
+      "retransmissions_sack_gap": 252,
+      "grace_checks_resolved_by_ack": 421,
+      "abandoned_deadline": 583,
+      "retransmissions_timeout": 179
+    },
+    "attempts": {
+      "1": 431
+    },
+    "wall_seconds": 0.35094466699956683
+  },
+  {
+    "scenario": "bursty_loss-recovery-seed-03",
+    "implementation": "grace_backoff",
+    "metrics": {
+      "abandoned_deadline": 549,
+      "grace_checks_scheduled": 698,
+      "retransmissions": 412,
+      "retransmissions_sack_gap": 231,
+      "grace_checks_resolved_by_ack": 425,
+      "retransmissions_timeout": 181
+    },
+    "attempts": {
+      "1": 412
+    },
+    "wall_seconds": 0.3332620000001043
+  },
+  {
+    "scenario": "bursty_loss-recovery-seed-04",
+    "implementation": "grace_backoff",
+    "metrics": {
+      "grace_checks_scheduled": 702,
+      "grace_checks_resolved_by_ack": 440,
+      "retransmissions": 442,
+      "retransmissions_sack_gap": 252,
+      "retransmissions_timeout": 190,
+      "abandoned_deadline": 611
+    },
+    "attempts": {
+      "1": 442
+    },
+    "wall_seconds": 0.3460899999990943
+  },
+  {
+    "scenario": "bursty_loss-recovery-seed-05",
+    "implementation": "grace_backoff",
+    "metrics": {
+      "grace_checks_scheduled": 688,
+      "grace_checks_resolved_by_ack": 431,
+      "retransmissions": 383,
+      "retransmissions_sack_gap": 234,
+      "abandoned_deadline": 552,
+      "retransmissions_timeout": 149
+    },
+    "attempts": {
+      "1": 383
+    },
+    "wall_seconds": 0.327885916998639
+  },
+  {
+    "scenario": "mixed-recovery-seed-01",
+    "implementation": "grace_backoff",
+    "metrics": {
+      "grace_checks_scheduled": 916,
+      "abandoned_deadline": 1280,
+      "grace_checks_resolved_by_ack": 317,
+      "retransmissions": 2,
+      "retransmissions_sack_gap": 2
+    },
+    "attempts": {
+      "1": 2
+    },
+    "wall_seconds": 0.2218332919983368
+  },
+  {
+    "scenario": "mixed-recovery-seed-02",
+    "implementation": "grace_backoff",
+    "metrics": {
+      "grace_checks_scheduled": 735,
+      "abandoned_deadline": 3423,
+      "grace_checks_resolved_by_ack": 286,
+      "retransmissions": 1,
+      "retransmissions_sack_gap": 1
+    },
+    "attempts": {
+      "1": 1
+    },
+    "wall_seconds": 0.25667491700005485
+  },
+  {
+    "scenario": "mixed-recovery-seed-03",
+    "implementation": "grace_backoff",
+    "metrics": {
+      "grace_checks_scheduled": 869,
+      "abandoned_deadline": 1233,
+      "grace_checks_resolved_by_ack": 294,
+      "retransmissions": 4,
+      "retransmissions_sack_gap": 4
+    },
+    "attempts": {
+      "1": 4
+    },
+    "wall_seconds": 0.2443262910019257
+  },
+  {
+    "scenario": "mixed-recovery-seed-04",
+    "implementation": "grace_backoff",
+    "metrics": {
+      "grace_checks_scheduled": 934,
+      "abandoned_deadline": 1296,
+      "grace_checks_resolved_by_ack": 313,
+      "retransmissions": 1,
+      "retransmissions_sack_gap": 1
+    },
+    "attempts": {
+      "1": 1
+    },
+    "wall_seconds": 0.24511766599971452
+  },
+  {
+    "scenario": "mixed-recovery-seed-05",
+    "implementation": "grace_backoff",
+    "metrics": {
+      "grace_checks_scheduled": 937,
+      "abandoned_deadline": 1277,
+      "grace_checks_resolved_by_ack": 335,
+      "retransmissions": 8,
+      "retransmissions_sack_gap": 8
+    },
+    "attempts": {
+      "1": 8
+    },
+    "wall_seconds": 0.22042195899848593
+  },
+  {
+    "scenario": "rate_swings-recovery-seed-01",
+    "implementation": "grace_backoff",
+    "metrics": {
+      "grace_checks_scheduled": 204,
+      "grace_checks_resolved_by_ack": 204,
+      "abandoned_deadline": 678,
+      "retransmissions": 79,
+      "retransmissions_timeout": 79
+    },
+    "attempts": {
+      "1": 79
+    },
+    "wall_seconds": 0.22680399999808287
+  },
+  {
+    "scenario": "rate_swings-recovery-seed-02",
+    "implementation": "grace_backoff",
+    "metrics": {
+      "grace_checks_scheduled": 170,
+      "grace_checks_resolved_by_ack": 170,
+      "abandoned_deadline": 778,
+      "retransmissions": 112,
+      "retransmissions_timeout": 112
+    },
+    "attempts": {
+      "1": 112
+    },
+    "wall_seconds": 0.2239135419986269
+  },
+  {
+    "scenario": "rate_swings-recovery-seed-03",
+    "implementation": "grace_backoff",
+    "metrics": {
+      "grace_checks_scheduled": 201,
+      "grace_checks_resolved_by_ack": 201,
+      "abandoned_deadline": 2030,
+      "retransmissions": 190,
+      "retransmissions_timeout": 190
+    },
+    "attempts": {
+      "1": 190
+    },
+    "wall_seconds": 0.27535991599870613
+  },
+  {
+    "scenario": "rate_swings-recovery-seed-04",
+    "implementation": "grace_backoff",
+    "metrics": {
+      "grace_checks_scheduled": 196,
+      "grace_checks_resolved_by_ack": 196,
+      "abandoned_deadline": 680,
+      "retransmissions": 67,
+      "retransmissions_timeout": 67
+    },
+    "attempts": {
+      "1": 67
+    },
+    "wall_seconds": 0.23835837499791523
+  },
+  {
+    "scenario": "rate_swings-recovery-seed-05",
+    "implementation": "grace_backoff",
+    "metrics": {
+      "grace_checks_scheduled": 215,
+      "grace_checks_resolved_by_ack": 215,
+      "abandoned_deadline": 695,
+      "retransmissions": 61,
+      "retransmissions_timeout": 61
+    },
+    "attempts": {
+      "1": 61
+    },
+    "wall_seconds": 0.25077491699994425
+  },
+  {
+    "scenario": "heavy_loss",
+    "implementation": "one_retry",
+    "metrics": {
+      "grace_checks_scheduled": 1298,
+      "retransmissions": 1182,
+      "retransmissions_sack_gap": 984,
+      "grace_checks_resolved_by_ack": 314,
+      "retransmissions_timeout": 198,
+      "abandoned_retry_limit": 208
+    },
+    "attempts": {
+      "1": 1182
+    },
+    "wall_seconds": 0.37482004100093036
+  },
+  {
+    "scenario": "heavy_loss",
+    "implementation": "two_retries",
+    "metrics": {
+      "grace_checks_scheduled": 1298,
+      "retransmissions": 1182,
+      "retransmissions_sack_gap": 984,
+      "grace_checks_resolved_by_ack": 314,
+      "retransmissions_timeout": 198,
+      "abandoned_deadline": 208
+    },
+    "attempts": {
+      "1": 1182
+    },
+    "wall_seconds": 0.35922191699864925
+  },
+  {
+    "scenario": "heavy_loss",
+    "implementation": "three_retries",
+    "metrics": {
+      "grace_checks_scheduled": 1298,
+      "retransmissions": 1182,
+      "retransmissions_sack_gap": 984,
+      "grace_checks_resolved_by_ack": 314,
+      "retransmissions_timeout": 198,
+      "abandoned_deadline": 208
+    },
+    "attempts": {
+      "1": 1182
+    },
+    "wall_seconds": 0.44960683299723314
+  },
+  {
+    "scenario": "heavy_loss",
+    "implementation": "no_backoff",
+    "metrics": {
+      "grace_checks_scheduled": 1298,
+      "retransmissions": 1182,
+      "retransmissions_sack_gap": 984,
+      "grace_checks_resolved_by_ack": 314,
+      "retransmissions_timeout": 198,
+      "abandoned_deadline": 208
+    },
+    "attempts": {
+      "1": 1182
+    },
+    "wall_seconds": 0.41569141700165346
+  },
+  {
+    "scenario": "bursty_loss",
+    "implementation": "one_retry",
+    "metrics": {
+      "abandoned_deadline": 451,
+      "grace_checks_scheduled": 698,
+      "retransmissions": 412,
+      "retransmissions_sack_gap": 231,
+      "grace_checks_resolved_by_ack": 425,
+      "retransmissions_timeout": 181,
+      "abandoned_retry_limit": 98
+    },
+    "attempts": {
+      "1": 412
+    },
+    "wall_seconds": 0.44064241699743434
+  },
+  {
+    "scenario": "bursty_loss",
+    "implementation": "two_retries",
+    "metrics": {
+      "abandoned_deadline": 549,
+      "grace_checks_scheduled": 698,
+      "retransmissions": 412,
+      "retransmissions_sack_gap": 231,
+      "grace_checks_resolved_by_ack": 425,
+      "retransmissions_timeout": 181
+    },
+    "attempts": {
+      "1": 412
+    },
+    "wall_seconds": 0.37842287499734084
+  },
+  {
+    "scenario": "bursty_loss",
+    "implementation": "three_retries",
+    "metrics": {
+      "abandoned_deadline": 549,
+      "grace_checks_scheduled": 698,
+      "retransmissions": 412,
+      "retransmissions_sack_gap": 231,
+      "grace_checks_resolved_by_ack": 425,
+      "retransmissions_timeout": 181
+    },
+    "attempts": {
+      "1": 412
+    },
+    "wall_seconds": 0.3915265409996209
+  },
+  {
+    "scenario": "bursty_loss",
+    "implementation": "no_backoff",
+    "metrics": {
+      "abandoned_deadline": 549,
+      "grace_checks_scheduled": 698,
+      "retransmissions": 412,
+      "retransmissions_sack_gap": 231,
+      "grace_checks_resolved_by_ack": 425,
+      "retransmissions_timeout": 181
+    },
+    "attempts": {
+      "1": 412
+    },
+    "wall_seconds": 0.39426983300290885
+  },
+  {
+    "scenario": "mixed",
+    "implementation": "one_retry",
+    "metrics": {
+      "grace_checks_scheduled": 922,
+      "grace_checks_resolved_by_ack": 328,
+      "abandoned_deadline": 1331,
+      "retransmissions": 2,
+      "retransmissions_sack_gap": 2
+    },
+    "attempts": {
+      "1": 2
+    },
+    "wall_seconds": 0.27126858300107415
+  },
+  {
+    "scenario": "mixed",
+    "implementation": "two_retries",
+    "metrics": {
+      "grace_checks_scheduled": 922,
+      "grace_checks_resolved_by_ack": 328,
+      "abandoned_deadline": 1331,
+      "retransmissions": 2,
+      "retransmissions_sack_gap": 2
+    },
+    "attempts": {
+      "1": 2
+    },
+    "wall_seconds": 0.2897744170004444
+  },
+  {
+    "scenario": "mixed",
+    "implementation": "three_retries",
+    "metrics": {
+      "grace_checks_scheduled": 922,
+      "grace_checks_resolved_by_ack": 328,
+      "abandoned_deadline": 1331,
+      "retransmissions": 2,
+      "retransmissions_sack_gap": 2
+    },
+    "attempts": {
+      "1": 2
+    },
+    "wall_seconds": 0.2796513749999576
+  },
+  {
+    "scenario": "mixed",
+    "implementation": "no_backoff",
+    "metrics": {
+      "grace_checks_scheduled": 922,
+      "grace_checks_resolved_by_ack": 328,
+      "abandoned_deadline": 1331,
+      "retransmissions": 2,
+      "retransmissions_sack_gap": 2
+    },
+    "attempts": {
+      "1": 2
+    },
+    "wall_seconds": 0.2322130409993406
+  },
+  {
+    "scenario": "reorder",
+    "implementation": "one_retry",
+    "metrics": {
+      "retransmissions": 123,
+      "retransmissions_timeout": 68,
+      "abandoned_retry_limit": 30,
+      "grace_checks_scheduled": 547,
+      "retransmissions_sack_gap": 55,
+      "abandoned_deadline": 845,
+      "grace_checks_resolved_by_ack": 32
+    },
+    "attempts": {
+      "1": 123
+    },
+    "wall_seconds": 0.17117229199720896
+  },
+  {
+    "scenario": "reorder",
+    "implementation": "two_retries",
+    "metrics": {
+      "retransmissions": 123,
+      "retransmissions_timeout": 68,
+      "abandoned_deadline": 875,
+      "grace_checks_scheduled": 547,
+      "retransmissions_sack_gap": 55,
+      "grace_checks_resolved_by_ack": 32
+    },
+    "attempts": {
+      "1": 123
+    },
+    "wall_seconds": 0.17018729200208327
+  },
+  {
+    "scenario": "reorder",
+    "implementation": "three_retries",
+    "metrics": {
+      "retransmissions": 123,
+      "retransmissions_timeout": 68,
+      "abandoned_deadline": 875,
+      "grace_checks_scheduled": 547,
+      "retransmissions_sack_gap": 55,
+      "grace_checks_resolved_by_ack": 32
+    },
+    "attempts": {
+      "1": 123
+    },
+    "wall_seconds": 0.17228579099901253
+  },
+  {
+    "scenario": "reorder",
+    "implementation": "no_backoff",
+    "metrics": {
+      "retransmissions": 123,
+      "retransmissions_timeout": 68,
+      "abandoned_deadline": 875,
+      "grace_checks_scheduled": 547,
+      "retransmissions_sack_gap": 55,
+      "grace_checks_resolved_by_ack": 32
+    },
+    "attempts": {
+      "1": 123
+    },
+    "wall_seconds": 0.17881891599972732
+  }
+]
